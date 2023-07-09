@@ -1,0 +1,124 @@
+{% extends 'restaurant_app/base.html' %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+<div class="intro_stuff">
+<h1>Food Menu!</h1>  
+<button type="button" class="view_cart_button" onclick="viewCartBtn()">View cart</button>
+</div>
+
+{% for food in food_items %}
+ <div class="row">    
+    <div class="items_cont col-md-6">
+     <p>Food Item: {{ food.dish_name }}</p>
+     <p>Food Description: {{ food.dish_description }}</p>
+     <p>Food Price: {{ food.dish_price }}</p>
+    </div>
+    <div class="input-group">
+        <input type="button" value="-" class="button-minus" data-field="quantity">
+        <input type="number" data-dish-name="{{ food.dish_name }}" data-price="{{ food.dish_price }}" step="1" max="" value="0" name="quantity" class="quantity-field food_counter">
+        <input type="button" value="+" class="button-plus" data-field="quantity">
+      </div>
+      
+    </div>
+    <hr></hr>
+
+    {% endfor %}
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Current order</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body summary_modal"></div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" onclick="orderFood()" class="btn btn-primary" >Order</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+<script>
+    
+    var foodJson = []
+    var totalPriceallFoods = 0;
+    function viewCartBtn(){
+        let summary = '';
+        let total_food_price = 0;
+        $(".food_counter").each(function(){
+            let quantity = $(this).val();
+            let foodName = $(this).data("dish-name");
+            let totalPrice = $(this).val() * $(this).data("price");
+            total_food_price = total_food_price+totalPrice;
+            if(totalPrice != 0) {
+              summary += `<p>
+                Dish: ${foodName} - Quantity: ${quantity} - Price: ${totalPrice}
+              </p>\n`;
+              foodJson.push({"foodName": foodName, "quantity": quantity, "totalPrice": totalPrice});
+            }
+        });
+        summary += `<p class="total_price_holder">Total:${total_food_price}</p>\n`;
+        totalPriceallFoods = total_food_price;
+        $(".summary_modal").html(summary);
+        let summary_modal = new bootstrap.Modal($('#exampleModal'))
+        summary_modal.toggle()
+    }
+
+    function orderFood(){
+      $.ajax({
+        url : "http://127.0.0.1:8000/orderFood",
+        type: "POST",
+        data : {
+            foodjson: JSON.stringify(foodJson),
+            total_price_allfoods: totalPriceallFoods,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success : function(response){
+          bootbox.alert("Order Completed!");
+          setTimeout(() => {
+            location.href = "/foodmenu";
+          }, 1000);
+        },
+      });
+    }
+
+
+    function incrementValue(e) {
+        e.preventDefault();
+        var fieldName = $(e.target).data('field');
+        var parent = $(e.target).closest('div');
+        var currentVal = parseInt(parent.find('input[name=' + fieldName + ']').val(), 10);
+      
+        if (!isNaN(currentVal)) {
+          parent.find('input[name=' + fieldName + ']').val(currentVal + 1);
+        } else {
+          parent.find('input[name=' + fieldName + ']').val(0);
+        }
+      }
+      
+      function decrementValue(e) {
+        e.preventDefault();
+        var fieldName = $(e.target).data('field');
+        var parent = $(e.target).closest('div');
+        var currentVal = parseInt(parent.find('input[name=' + fieldName + ']').val(), 10);
+      
+        if (!isNaN(currentVal) && currentVal > 0) {
+          parent.find('input[name=' + fieldName + ']').val(currentVal - 1);
+        } else {
+          parent.find('input[name=' + fieldName + ']').val(0);
+        }
+      }
+      
+      $('.input-group').on('click', '.button-plus', function(e) {
+        incrementValue(e);
+      });
+      
+      $('.input-group').on('click', '.button-minus', function(e) {
+        decrementValue(e);
+      });
+</script>
+{% endblock %}

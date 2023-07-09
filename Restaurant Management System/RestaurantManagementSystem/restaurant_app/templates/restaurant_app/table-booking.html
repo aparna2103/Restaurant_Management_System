@@ -1,0 +1,30 @@
+{% extends 'restaurant_app/base.html' %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+<h1>Table Booking!</h1>
+{% for table in tables %}
+    <div class="row table_{{table.id}}">    
+    <div class="col-md-6" style="margin-bottom: 0.8em">
+        <p>Table type: {{table.table_type}}</p>
+        <button type="button" onclick="bookTable({{table.id}})" class="table_class_{{table.id}}">Book</button>
+    </div>
+    <hr></hr>
+    </div>
+{% endfor %}
+
+<script>
+    function bookTable(table_id){
+        $.ajax({
+            url : "http://127.0.0.1:8000/bookTable",
+            type: "POST",
+            data : {
+                table_id: table_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success : function(response){
+                $(`.table_class_${table_id}`).remove()
+            },
+        });
+    }
+</script>
+{% endblock %}

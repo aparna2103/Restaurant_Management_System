@@ -1,0 +1,33 @@
+{% extends 'restaurant_app/base.html' %}
+{% load static %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+
+<html>
+<head>
+    <style>
+        body {
+            background-image: url("{% static '/img1.png' %}");
+            background-color: powderblue;
+            width: 99%;
+            height: 700px;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            margin-bottom: 0;
+            margin-top: 0;
+          }
+          
+        h1 {
+            padding-left: 6em; 
+            margin-top: 1em;
+            
+        }
+       
+    </style>
+</head>
+
+<body>
+    <h1 style="color: white;">Welcome to the Restaurant Management System!</h1>
+</body>
+</html>
+{% endblock %}

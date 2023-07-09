@@ -1,0 +1,18 @@
+{% extends 'restaurant_app/base.html' %}
+{% block title %}Login{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<script>
+  if("{{user.is_authenticated}}" == "True") {
+    location.href = '/home'
+  }
+</script>
+<h1>Login</h1>
+<form method="post">
+  {% csrf_token %}
+  {{form|crispy}}
+  <p>Don't have an account? Create one <a href="/sign-up">Here</a>!</p>
+  <button type="submit" class="btn btn-success">Login</button>
+</form>
+{% endblock %}

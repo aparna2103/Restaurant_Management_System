@@ -1,0 +1,15 @@
+{% extends 'restaurant_app/base.html' %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+<h1>My Order History!</h1>
+
+{% for key, value in orders.items %}
+    {% for dish in value %}
+        <p>Dish Name: {{dish.dish_name}}</p>
+        <p>Quantity: {{dish.quantity}}</p>
+        <p>Total Price: {{dish.total_price}}</p>
+    {% endfor %}
+    <hr />
+{% endfor %}
+
+{% endblock %}

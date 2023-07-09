@@ -1,0 +1,15 @@
+{% extends 'restaurant_app/base.html' %}
+{% block title %}Payment Info{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% if not payment_details_exist %}
+    <form method="post" action="/savepaymentinfo">
+        {% csrf_token %}
+        {{form|crispy}}
+        <button type="submit" class="btn btn-success">Save</button>
+    </form>
+{% else %}
+    <p>Card Number: {{payment_details.cardnumber}}</p>
+    <p>Cvv: ***</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'restaurant_app/base.html' %}
+{% load static %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+<div class="heading_class" style="display: flex; align-items: flex-start; margin-top: 1rem; margin-bottom: 1rem;">
+<h1>Customers</h1>
+{% comment %} <button type="button" onclick="addFood()" style="margin-left: auto">Add Food Item</button> {% endcomment %}
+</div>
+{% for user in users %}
+ <div class="row user_{{user.id}}">    
+    <div class="col-md-6" style="margin-bottom: 0.8em">
+     <p>Full Name: {{user.full_name}}</p>
+     <p>Email: {{ user.email }}</p>
+     <p>Address: {{ user.address }}</p>
+     <p>Contact: {{ user.contact_number }}</p>
+    </div>
+    <hr></hr>
+ </div>
+{% endfor %}
+{% endblock %}

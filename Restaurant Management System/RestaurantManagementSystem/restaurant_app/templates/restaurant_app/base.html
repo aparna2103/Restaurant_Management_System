@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width", initial-scale="1.0">
+    <link rel="stylesheet" href="{% static '/commons.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <title>{% block title %}My Site{% endblock %}</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class = "container-fluid">
+            {% if user.is_authenticated %}
+           <div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <u><a class="nav-link" href="/home">Home</a> </u>
+                    </li>
+                    {% if user.role == 1 %}
+                    <li class="nav-item">
+                        <u><a class="nav-link" href="/foodmenu">Food Menu</a> </u>
+                    </li>
+                    <li class="nav-item">
+                        <u><a class="nav-link" href="/table-booking">Table Booking</a> </u>
+                    </li>
+                    <li class="nav-item">
+                        <u><a class="nav-link" href="/order-history">Order History</a> </u>
+                    </li>
+                    <li class="nav-item">
+                        <u><a class="nav-link" href="/savepaymentinfo">Payment Details</a> </u>
+                    </li>
+                    {% endif %}
+                    {% if user.role == 2 %}
+                    <li class="nav-item">
+                        <u><a class="nav-link" href="/edit-menu">Update Food Menu</a> </u>
+                    </li>
+                    <li class="nav-item">
+                        <u><a class="nav-link" href="/tableslist">Update Tables</a> </u>
+                    </li>
+                    <li class="nav-item">
+                        <u><a class="nav-link" href="/viewusers">View Customers</a> </u>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+           </div>
+           {% endif %}
+           <div>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                <span class="navbar-text">Logged in as {{user.username}} | </span>
+                <li class="nav-item">
+                    <u><a class="nav-link" href="/logout">Logout</a></u>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link">Restaurant Management System</a>
+                </li>
+                {% endif %}
+            </ul>
+       </div>
+        </div>
+    </nav>
+    <div class = "container">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
+
+</body>
+</html>

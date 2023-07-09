@@ -1,0 +1,74 @@
+{% extends 'restaurant_app/base.html' %}
+{% block title %}Tables{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="heading_class" style="display: flex; align-items: flex-start; margin-top: 1rem; margin-bottom: 1rem;">
+    <h1>Tables</h1>
+    {% comment %} <button type="button" onclick="triggerModal()" style="margin-left: auto">Add Table</button> {% endcomment %}
+    <button type="button" onclick="triggerModal()" style="margin-left: auto">Add Table</button>
+</div>
+{% for table in tables %}
+    <div class="row table_{{table.id}}">    
+    <div class="col-md-6" style="margin-bottom: 0.8em">
+        <p>Table type: {{table.table_type}}</p>
+        <p>Status: {{table.status}}</p>
+        <button type="button" onclick="changeAvailability({{table.id}})">Change Status</button>
+    </div>
+    <hr></hr>
+    </div>
+{% endfor %}
+
+<!-- Modal -->
+<div class="modal fade" id="addTable" tabindex="-1" aria-labelledby="addTableLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addTableLabel">Add Table</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body add_table_modal">
+            Table type: <input type="text" class="table_type" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" onclick="addTableCall()" class="btn btn-primary">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+    function triggerModal(){
+        var editModal = new bootstrap.Modal($("#addTable"));
+        editModal.toggle();
+    }
+
+    function addTableCall(){
+        $.ajax({
+            url : "http://127.0.0.1:8000/addTable",
+            type: "POST",
+            data : {
+                table_type:  $(".table_type").val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success : function(response){
+                window.location.reload()
+            },
+        });
+    }
+
+    function changeAvailability(table_id){
+        $.ajax({
+            url : "http://127.0.0.1:8000/changeTableAvailability",
+            type: "POST",
+            data : {
+                table_id: table_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success : function(response){
+                window.location.reload()
+            },
+        });
+    }
+</script>
+{% endblock %}
